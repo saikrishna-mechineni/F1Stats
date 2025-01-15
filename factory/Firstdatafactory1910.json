@@ -1,0 +1,9 @@
+{
+	"name": "Firstdatafactory1910",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ba6de0ef-2256-4632-9e7b-780bf172897a",
+		"tenantId": "0bca7ac3-fcb6-4efd-89eb-6de97603cf21"
+	}
+}
