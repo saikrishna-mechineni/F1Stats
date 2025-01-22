@@ -1,0 +1,53 @@
+{
+	"name": "ds_circuit",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_dbf1_baselayer_ks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "circuitId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "circuitRef",
+				"type": "nvarchar"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "location",
+				"type": "nvarchar"
+			},
+			{
+				"name": "country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lng",
+				"type": "nvarchar"
+			},
+			{
+				"name": "alt",
+				"type": "nvarchar"
+			},
+			{
+				"name": "url",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "circuits.csv"
+		}
+	}
+}
