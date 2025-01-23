@@ -13,21 +13,33 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "src_results",
+						"referenceName": "src_races",
 						"type": "DatasetReference"
 					},
-					"name": "srcresultdb"
+					"name": "srcracesdb",
+					"description": "Import data from src_races"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "joincicuitsresults"
+				},
+				{
+					"name": "filteredcolumns"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          circuitId as string,",
+				"          circuitId as integer,",
 				"          circuitRef as string,",
 				"          name as string,",
 				"          location as string,",
@@ -42,51 +54,62 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> srccircuitdb",
 				"source(output(",
-				"          resultId as string,",
-				"          raceId as string,",
-				"          driverId as string,",
-				"          constructorId as string,",
-				"          number as string,",
-				"          grid as string,",
-				"          position as string,",
-				"          positionText as string,",
-				"          positionOrder as string,",
-				"          points as string,",
-				"          laps as string,",
-				"          time as string,",
-				"          milliseconds as string,",
-				"          fastestLap as string,",
-				"          rank as string,",
-				"          fastestLapTime as string,",
-				"          fastestLapSpeed as string,",
-				"          statusId as string",
+				"          raceId as integer,",
+				"          year as integer,",
+				"          round as integer,",
+				"          circuitId as integer,",
+				"          name as string,",
+				"          date as date,",
+				"          time as timestamp,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> srcresultdb",
-				"srcresultdb select(mapColumn(",
-				"          resultId,",
+				"     format: 'table') ~> srcracesdb",
+				"srccircuitdb, srcracesdb join(srccircuitdb@circuitId == srcracesdb@circuitId,",
+				"     joinType:'right',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joincicuitsresults",
+				"joincicuitsresults select(mapColumn(",
+				"          circuitId = srccircuitdb@circuitId,",
+				"          circuitRef,",
+				"          name = srccircuitdb@name,",
+				"          location,",
+				"          country,",
 				"          raceId,",
-				"          driverId,",
-				"          constructorId,",
-				"          number,",
-				"          grid,",
-				"          position,",
-				"          positionText,",
-				"          positionOrder,",
-				"          points,",
-				"          laps,",
+				"          year,",
+				"          round,",
+				"          circuitId = srcracesdb@circuitId,",
+				"          name = srcracesdb@name,",
+				"          date,",
 				"          time,",
-				"          milliseconds,",
-				"          fastestLap,",
-				"          rank,",
-				"          fastestLapTime,",
-				"          fastestLapSpeed,",
-				"          statusId",
+				"          url = srcracesdb@url",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> filteredcolumns",
+				"filteredcolumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

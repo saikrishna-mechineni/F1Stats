@@ -1,5 +1,5 @@
 {
-	"name": "src_results",
+	"name": "src_races",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SQL_dbf1_baselayer_ks",
@@ -83,7 +83,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "results.csv"
+			"table": "races.csv"
 		}
 	}
 }
