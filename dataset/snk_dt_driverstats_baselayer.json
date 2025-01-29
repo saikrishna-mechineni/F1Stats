@@ -1,0 +1,25 @@
+{
+	"name": "snk_dt_driverstats_baselayer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sink_dt_baselayer_f1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"driverstats": {
+				"type": "string",
+				"defaultValue": "driverstats"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": {
+				"value": "driverstats",
+				"type": "Expression"
+			}
+		}
+	}
+}

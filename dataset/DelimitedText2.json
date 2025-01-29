@@ -1,0 +1,52 @@
+{
+	"name": "DelimitedText2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "driver_standings.csv",
+				"container": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "driverStandingsId",
+				"type": "String"
+			},
+			{
+				"name": "raceId",
+				"type": "String"
+			},
+			{
+				"name": "driverId",
+				"type": "String"
+			},
+			{
+				"name": "points",
+				"type": "String"
+			},
+			{
+				"name": "position",
+				"type": "String"
+			},
+			{
+				"name": "positionText",
+				"type": "String"
+			},
+			{
+				"name": "wins",
+				"type": "String"
+			}
+		]
+	}
+}

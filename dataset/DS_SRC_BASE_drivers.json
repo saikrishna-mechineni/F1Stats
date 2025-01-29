@@ -1,0 +1,53 @@
+{
+	"name": "DS_SRC_BASE_drivers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_dbf1_baselayer_ks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "driverId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "driverRef",
+				"type": "nvarchar"
+			},
+			{
+				"name": "number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "forename",
+				"type": "nvarchar"
+			},
+			{
+				"name": "surname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dob",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nationality",
+				"type": "nvarchar"
+			},
+			{
+				"name": "url",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "drivers.csv"
+		}
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "sink_dt_baselayer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dt_circuits",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

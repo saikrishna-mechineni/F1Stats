@@ -1,0 +1,107 @@
+{
+	"name": "src_base_driver_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SRC_BASE_drivers",
+						"type": "DatasetReference"
+					},
+					"name": "srcdrivers"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SRC_BASE_Driverstading",
+						"type": "DatasetReference"
+					},
+					"name": "srcDriverStanding"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "snk_dt_driverstats_baselayer",
+						"type": "DatasetReference"
+					},
+					"name": "driverstats"
+				}
+			],
+			"transformations": [
+				{
+					"name": "srcDerivedColumndrivers"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          driverId as integer,",
+				"          driverRef as string,",
+				"          number as string,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as date,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcdrivers",
+				"source(output(",
+				"          driverStandingsId as integer,",
+				"          raceId as integer,",
+				"          driverId as integer,",
+				"          points as integer,",
+				"          position as integer,",
+				"          positionText as integer,",
+				"          wins as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcDriverStanding",
+				"srcdrivers derive(DriverName = concat(forename,' ', surname),",
+				"          DriverNumber = toInteger(number)) ~> srcDerivedColumndrivers",
+				"srcDerivedColumndrivers, srcDriverStanding join(srcdrivers@driverId == srcDriverStanding@driverId,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          driverId = srcdrivers@driverId,",
+				"          code,",
+				"          dob,",
+				"          nationality,",
+				"          DriverName,",
+				"          DriverNumber,",
+				"          raceId,",
+				"          points,",
+				"          position,",
+				"          positionText,",
+				"          wins",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> driverstats"
+			]
+		}
+	}
+}

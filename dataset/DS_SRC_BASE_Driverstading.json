@@ -1,0 +1,45 @@
+{
+	"name": "DS_SRC_BASE_Driverstading",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_dbf1_baselayer_ks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "driverStandingsId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "raceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "driverId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "points",
+				"type": "nvarchar"
+			},
+			{
+				"name": "position",
+				"type": "nvarchar"
+			},
+			{
+				"name": "positionText",
+				"type": "nvarchar"
+			},
+			{
+				"name": "wins",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "driver_standings.csv"
+		}
+	}
+}

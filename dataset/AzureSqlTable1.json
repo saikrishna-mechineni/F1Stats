@@ -2,7 +2,7 @@
 	"name": "AzureSqlTable1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase3",
+			"referenceName": "sink_db_f1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -15,10 +15,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": {
-				"value": "@dataset().tablename",
-				"type": "Expression"
-			}
+			"table": "driver_standings.csv"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
