@@ -2,11 +2,23 @@
 	"name": "sink_dt_baselayer",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_dt_circuits",
+			"referenceName": "sink_dt_baselayer_f1",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tablename": {
+				"type": "string",
+				"defaultValue": "driverinfo"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().tablename",
+				"type": "Expression"
+			}
+		}
 	}
 }

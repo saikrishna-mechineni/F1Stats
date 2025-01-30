@@ -1,0 +1,171 @@
+{
+	"name": "src_driver_races_sink",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SRC_BASE_Driverstading",
+						"type": "DatasetReference"
+					},
+					"name": "srcdriverstanding"
+				},
+				{
+					"dataset": {
+						"referenceName": "src_races",
+						"type": "DatasetReference"
+					},
+					"name": "srcraces"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SRC_BASE_drivers",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sink_dt_baselayer",
+						"type": "DatasetReference"
+					},
+					"name": "snkdriverinfo"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          driverStandingsId as integer,",
+				"          raceId as integer,",
+				"          driverId as integer,",
+				"          points as integer,",
+				"          position as integer,",
+				"          positionText as integer,",
+				"          wins as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcdriverstanding",
+				"source(output(",
+				"          raceId as integer,",
+				"          year as integer,",
+				"          round as integer,",
+				"          circuitId as integer,",
+				"          name as string,",
+				"          date as date,",
+				"          time as timestamp,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srcraces",
+				"source(output(",
+				"          driverId as integer,",
+				"          driverRef as string,",
+				"          number as integer,",
+				"          code as integer,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as date,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"srcdriverstanding, srcraces join(srcdriverstanding@raceId == srcraces@raceId,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          driverStandingsId,",
+				"          raceId = srcdriverstanding@raceId,",
+				"          driverId,",
+				"          points,",
+				"          position,",
+				"          positionText,",
+				"          wins,",
+				"          raceId = srcraces@raceId,",
+				"          year,",
+				"          round,",
+				"          circuitId,",
+				"          name,",
+				"          date,",
+				"          time",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 derive({Driver Name} = concat(forename,' ',surname)) ~> derivedColumn1",
+				"select1, derivedColumn1 join(select1@driverId == source1@driverId,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          raceId,",
+				"          driverId = select1@driverId,",
+				"          points,",
+				"          position,",
+				"          positionText,",
+				"          wins,",
+				"          year,",
+				"          round,",
+				"          circuitId,",
+				"          name,",
+				"          date,",
+				"          {driver Number} = number,",
+				"          code,",
+				"          dob,",
+				"          nationality,",
+				"          {Driver Name}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> snkdriverinfo"
+			]
+		}
+	}
+}
